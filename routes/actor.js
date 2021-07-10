@@ -6,4 +6,8 @@ const controller = require("../controllers/actors")
 
 router.get("/", controller.getAllActors);
 
+router.get("/streak", controller.getStreak);
+
+router.put("/", controller.updateActor);
+
 module.exports = router;

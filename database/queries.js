@@ -12,7 +12,7 @@ const createEventTable = `
 
 const createActorTable = `
   CREATE TABLE IF NOT EXISTS actors (
-    id INTEGER PRIMARY KEY,
+    id INTEGER KEY,
     login TEXT NOT NULL,
     avatar_url TEXT NOT NULL
   )
@@ -20,15 +20,19 @@ const createActorTable = `
 
 const createRepoTable = `
   CREATE TABLE IF NOT EXISTS repos (
-    id INTEGER PRIMARY KEY,
+    id INTEGER KEY,
     name TEXT NOT NULL,
     url TEXT NOT NULL
   )
 `;
 
+const eraseAllActors = `DELETE FROM actors`;
+const eraseAllRepo = `DELETE FROM repos`;
 const eraseAllEvents = `DELETE FROM events`;
 
-const getAllEventsAscEventId = `SELECT * FROM events INNER JOIN actors ON events.actor_id=actors.id INNER JOIN repos ON events.repo_id=repos.id ORDER BY id ASC`;
+const getAllEventsAscEventId = `SELECT * FROM events INNER JOIN actors ON events.actor_id = actors.id INNER JOIN repos ON events.repo_id=repos.id ORDER BY id ASC`;
+
+const getAllActors = `SELECT * FROM actors ORDER BY created_at ASC`;
 
 const getEventByActorId = `SELECT * FROM events INNER JOIN actors ON events.actor_id=actors.id INNER JOIN repos ON events.repo_id=repos.id WHERE actor_id=? ORDER BY id ASC`;
 
@@ -36,6 +40,8 @@ const getStreakActors = `SELECT MAX(events.created_at) as date, actors.login, ac
 `;
 
 const updateActorLoginField = `UPDATE actors SET avatar_url=COALESCE(?,avatar_url) WHERE id=?`;
+
+const checkActId = `SELECT * FROM actors WHERE id = ?`;
 
 const createRepoQuery = `
   INSERT INTO "repos"(id, name, url) 
@@ -65,6 +71,10 @@ const getAlCctorsByTotalEventsQuery = `
 
 module.exports = {
     createEventTable,
+    eraseAllActors,
+    eraseAllRepo,
+    checkActId,
+    getAllActors,
     countRepoData,
     createActorTable,
     countActorData,
